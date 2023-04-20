@@ -1,0 +1,73 @@
+C51 COMPILER V9.54   MAIN                                                                  12/08/2022 19:09:50 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: E:\k51\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main.lst
+                    -) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          #include "Delay.h"
+   3          sbit RCK=P3^5;  //RCLK 上升沿锁存
+   4          sbit SCK=P3^6;  //SRCLK 上升沿移位
+   5          sbit SER=P3^4;  //SER
+   6          
+   7          #define MATRIX_LED_PORT     P0
+   8          
+   9          void _74HC595_WriteByte(unsigned char Byte) 
+  10          {
+  11   1        unsigned char i;
+  12   1        for (i=0;i<8;i++)  
+  13   1        {
+  14   2          SER=Byte&(0x80>>i);  //1000 0000 
+  15   2          SCK=1;
+  16   2          SCK=0;
+  17   2        }
+  18   1        RCK=1;
+  19   1        RCK=0;
+  20   1      }
+  21          
+  22          void MatrixLED_ShowColumn(unsigned char Column,Data)
+  23          {
+  24   1        _74HC595_WriteByte(Data);  //Data==Byte
+  25   1        MATRIX_LED_PORT=~(0x80>>Column); //0选中，1不选中
+  26   1        Delay(1); //延迟
+  27   1        MATRIX_LED_PORT=0xFF;  //全灭  消影
+  28   1      }
+  29          
+  30          
+  31          void main()
+  32          {
+  33   1        SCK=0; //刚开始是高电平，所以要置0，使其为低电平
+  34   1        RCK=0;
+  35   1        
+  36   1        while(1)
+  37   1        {
+  38   2          MatrixLED_ShowColumn(0,0x3C); //1亮0不亮
+  39   2          MatrixLED_ShowColumn(1,0x42);
+  40   2          MatrixLED_ShowColumn(2,0xA9);
+  41   2          MatrixLED_ShowColumn(3,0x85);
+  42   2          MatrixLED_ShowColumn(4,0x85);
+  43   2          MatrixLED_ShowColumn(5,0xA9);
+  44   2          MatrixLED_ShowColumn(6,0x42);
+  45   2          MatrixLED_ShowColumn(7,0x3C);
+  46   2        }
+  47   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    157    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+C51 COMPILER V9.54   MAIN                                                                  12/08/2022 19:09:50 PAGE 2   
+
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

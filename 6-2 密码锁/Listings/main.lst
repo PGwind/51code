@@ -1,0 +1,83 @@
+C51 COMPILER V9.54   MAIN                                                                  12/05/2022 16:06:19 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: E:\k51\C51\BIN\C51.EXE ..\6-1 æÿ’Ûº¸≈Ã\main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\L
+                    -istings\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          #include "Delay.h"
+   3          #include "LCD1602.h"
+   4          #include "MatrixKey.h"
+   5          
+   6          int KeyNum;
+   7          int Password,Count;
+   8          
+   9          void main()
+  10          {
+  11   1        LCD_Init();
+  12   1        LCD_ShowString(1,1,"PassWord:");
+  13   1        while(1)
+  14   1        {
+  15   2          KeyNum=MatrixKey();
+  16   2          if (KeyNum)
+  17   2          {
+  18   3            if(KeyNum<=10)
+  19   3            {
+  20   4              if(Count<4)
+  21   4              {
+  22   5                Password*=10;
+  23   5                Password+=KeyNum%10;
+  24   5                Count++;
+  25   5              }
+  26   4            }
+  27   3      
+  28   3            LCD_ShowNum(2,1,Password,4);
+  29   3          }
+  30   2          if(KeyNum==11)  
+  31   2          {
+  32   3            if (Password==2345)
+  33   3            {
+  34   4              LCD_ShowString(1,12,"OK");
+  35   4              Password=0;
+  36   4              Count=0;
+  37   4              LCD_ShowNum(2,1,Password,4);
+  38   4            }
+  39   3            else
+  40   3            {
+  41   4              LCD_ShowString(1,12,"ERROR");
+  42   4              //Delay(2000);
+  43   4              Password=0;
+  44   4              Count=0;
+  45   4              LCD_ShowNum(2,1,Password,4);
+  46   4              //LCD_ShowString(1,12,"     ");
+  47   4            }
+  48   3          }
+  49   2          if (KeyNum==12)
+  50   2          {
+  51   3              Password=0;
+  52   3              Count=0;
+  53   3              LCD_ShowString(1,12,"     ");
+  54   3              LCD_ShowNum(2,1,Password,4);
+C51 COMPILER V9.54   MAIN                                                                  12/05/2022 16:06:19 PAGE 2   
+
+  55   3          }
+  56   2        }
+  57   1      }                      
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    221    ----
+   CONSTANT SIZE    =     25    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      6    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

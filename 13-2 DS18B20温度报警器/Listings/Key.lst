@@ -1,0 +1,90 @@
+C51 COMPILER V9.54   KEY                                                                   12/12/2022 18:58:13 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE KEY
+OBJECT MODULE PLACED IN .\Objects\Key.obj
+COMPILER INVOKED BY: E:\k51\C51\BIN\C51.EXE Key.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\Key.lst) 
+                    -TABS(2) OBJECT(.\Objects\Key.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          #include "Delay.h"
+   3          
+   4          unsigned char Key_KeyNumber;
+   5          
+   6          /**
+   7            * @brief  获取按键键码
+   8            * @param  无
+   9            * @retval 按下按键的键码，范围：0,1~4,0表示无按键按下
+  10            */
+  11          unsigned char Key(void)
+  12          {
+  13   1        unsigned char Temp=0;
+  14   1        Temp=Key_KeyNumber;
+  15   1        Key_KeyNumber=0;
+  16   1        return Temp;
+  17   1      }
+  18          
+  19          /**
+  20            * @brief  获取当前按键的状态，无消抖及松手检测
+  21            * @param  无
+  22            * @retval 按下按键的键码，范围：0,1~4,0表示无按键按下
+  23            */
+  24          unsigned char Key_GetState()
+  25          {
+  26   1        unsigned char KeyNumber=0;
+  27   1        
+  28   1        if(P3_1==0){KeyNumber=1;}
+  29   1        if(P3_0==0){KeyNumber=2;}
+  30   1        if(P3_2==0){KeyNumber=3;}
+  31   1        if(P3_3==0){KeyNumber=4;}
+  32   1        
+  33   1        return KeyNumber;
+  34   1      }
+  35          
+  36          /**
+  37            * @brief  按键驱动函数，在中断中调用
+  38            * @param  无
+  39            * @retval 无
+  40            */
+  41          void Key_Loop(void)
+  42          {
+  43   1        static unsigned char NowState,LastState;
+  44   1        LastState=NowState;       //按键状态更新
+  45   1        NowState=Key_GetState();    //获取当前按键状态
+  46   1        //如果上个时间点按键按下，这个时间点未按下，则是松手瞬间，以此避免消抖�
+             -��松手检测
+  47   1        if(LastState==1 && NowState==0)
+  48   1        {
+  49   2          Key_KeyNumber=1;
+  50   2        }
+  51   1        if(LastState==2 && NowState==0)
+  52   1        {
+  53   2          Key_KeyNumber=2;
+C51 COMPILER V9.54   KEY                                                                   12/12/2022 18:58:13 PAGE 2   
+
+  54   2        }
+  55   1        if(LastState==3 && NowState==0)
+  56   1        {
+  57   2          Key_KeyNumber=3;
+  58   2        }
+  59   1        if(LastState==4 && NowState==0)
+  60   1        {
+  61   2          Key_KeyNumber=4;
+  62   2        }
+  63   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     85    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      3    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

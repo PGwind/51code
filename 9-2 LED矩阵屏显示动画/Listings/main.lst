@@ -1,0 +1,60 @@
+C51 COMPILER V9.54   MAIN                                                                  12/08/2022 23:10:01 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: E:\k51\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main.lst
+                    -) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          #include "Delay.h"
+   3          #include "MatrixLED.h"
+   4          
+   5          unsigned char code Animation[]={
+   6            0x00,0x0C,0x1C,0x21,0xDE,0xE0,0x3F,0x10,
+   7            0x00,0x06,0x16,0x21,0xDE,0xE0,0x3F,0x10,
+   8            0x00,0x03,0x13,0x21,0xDE,0xE0,0x3F,0x10,
+   9            0x0C,0x0C,0x10,0x21,0xDE,0xE0,0x3F,0x10,
+  10            0x00,0x0C,0x1C,0x21,0xDE,0xE0,0x3F,0x10,
+  11          }; //加code这些数据会放在flash里面，不然在RAM里。flash内存较大
+  12          //但是后面数组无法更改
+  13          
+  14          void main()
+  15          {
+  16   1        unsigned char i,Offset=0,Count=0;  //Offset偏移量,即数组第几列 Count控制变换速度
+  17   1        MatrixLED_Init();
+  18   1        while(1)
+  19   1        {
+  20   2          for (i=0; i<8; i++)
+  21   2          {
+  22   3            MatrixLED_ShowColumn(i,Animation[i+Offset]);
+  23   3          }
+  24   2          Count++;
+  25   2          if (Count>15)
+  26   2          {
+  27   3            Count=0;
+  28   3            Offset+=8;
+  29   3            if(Offset>32) //防止数组溢出
+  30   3            {
+  31   4              Offset=0;
+  32   4            }
+  33   3              
+  34   3          }
+  35   2        }
+  36   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     64    ----
+   CONSTANT SIZE    =     40    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
